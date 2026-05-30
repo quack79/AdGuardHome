@@ -57,9 +57,11 @@ const Row = ({ label, count, response_status, tooltipTitle, translationComponent
 interface CountersProps {
     refreshButton: React.ReactNode;
     subtitle: string;
+    showThreatStats: boolean;
+    showAdultStats: boolean;
 }
 
-const Counters = ({ refreshButton, subtitle }: CountersProps) => {
+const Counters = ({ refreshButton, subtitle, showThreatStats, showAdultStats }: CountersProps) => {
     const {
         interval,
         numDnsQueries,
@@ -96,18 +98,26 @@ const Counters = ({ refreshButton, subtitle }: CountersProps) => {
                 </a>,
             ],
         },
-        {
-            label: 'stats_malware_phishing',
-            count: formatNumber(numReplacedSafebrowsing),
-            tooltipTitle: 'number_of_dns_query_blocked_24_hours_by_sec',
-            response_status: RESPONSE_FILTER.BLOCKED_THREATS.QUERY,
-        },
-        {
-            label: 'stats_adult',
-            count: formatNumber(numReplacedParental),
-            tooltipTitle: 'number_of_dns_query_blocked_24_hours_adult',
-            response_status: RESPONSE_FILTER.BLOCKED_ADULT_WEBSITES.QUERY,
-        },
+        ...(showThreatStats
+            ? [
+                {
+                    label: 'stats_malware_phishing',
+                    count: formatNumber(numReplacedSafebrowsing),
+                    tooltipTitle: 'number_of_dns_query_blocked_24_hours_by_sec',
+                    response_status: RESPONSE_FILTER.BLOCKED_THREATS.QUERY,
+                },
+            ]
+            : []),
+        ...(showAdultStats
+            ? [
+                {
+                    label: 'stats_adult',
+                    count: formatNumber(numReplacedParental),
+                    tooltipTitle: 'number_of_dns_query_blocked_24_hours_adult',
+                    response_status: RESPONSE_FILTER.BLOCKED_ADULT_WEBSITES.QUERY,
+                },
+            ]
+            : []),
         {
             label: 'enforced_save_search',
             count: formatNumber(numReplacedSafesearch),

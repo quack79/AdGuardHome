@@ -219,7 +219,12 @@ const Dashboard = ({
                     </div>
 
                     <div className="col-lg-6">
-                        <Counters subtitle={subtitle} refreshButton={refreshButton} />
+                        <Counters
+                            subtitle={subtitle}
+                            refreshButton={refreshButton}
+                            showThreatStats={safebrowsingEnabled}
+                            showAdultStats={parentalEnabled}
+                        />
                     </div>
 
                     <div className="col-lg-6">
