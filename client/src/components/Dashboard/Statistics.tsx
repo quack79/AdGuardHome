@@ -17,6 +17,8 @@ interface StatisticsProps {
     numBlockedFiltering: number;
     numReplacedSafebrowsing: number;
     numReplacedParental: number;
+    showThreatStats: boolean;
+    showAdultStats: boolean;
 }
 
 const Statistics = ({
@@ -28,68 +30,79 @@ const Statistics = ({
     numBlockedFiltering,
     numReplacedSafebrowsing,
     numReplacedParental,
-}: StatisticsProps) => (
-    <div className="row">
-        <div className="col-sm-6 col-lg-3">
-            <StatsCard
-                total={numDnsQueries}
-                lineData={dnsQueries}
-                title={
-                    <Link to="logs">
-                        <Trans>dns_query</Trans>
-                    </Link>
-                }
-                variant={STATS_CARD_VARIANTS.QUERIES}
-            />
-        </div>
+    showThreatStats,
+    showAdultStats,
+}: StatisticsProps) => {
+    const visibleCardsCount = 2 + Number(showThreatStats) + Number(showAdultStats);
+    const cardColumnClass = `col-sm-6 col-lg-${12 / visibleCardsCount}`;
 
-        <div className="col-sm-6 col-lg-3">
-            <StatsCard
-                total={numBlockedFiltering}
-                lineData={blockedFiltering}
-                percent={getPercent(numDnsQueries, numBlockedFiltering)}
-                title={
-                    <Trans
-                        components={[
-                            <Link to={`logs?response_status=${RESPONSE_FILTER.BLOCKED.QUERY}`} key="0">
-                                link
-                            </Link>,
-                        ]}>
-                        blocked_by
-                    </Trans>
-                }
-                variant={STATS_CARD_VARIANTS.ADS}
-            />
-        </div>
+    return (
+        <div className="row">
+            <div className={cardColumnClass}>
+                <StatsCard
+                    total={numDnsQueries}
+                    lineData={dnsQueries}
+                    title={
+                        <Link to="logs">
+                            <Trans>dns_query</Trans>
+                        </Link>
+                    }
+                    variant={STATS_CARD_VARIANTS.QUERIES}
+                />
+            </div>
 
-        <div className="col-sm-6 col-lg-3">
-            <StatsCard
-                total={numReplacedSafebrowsing}
-                lineData={replacedSafebrowsing}
-                percent={getPercent(numDnsQueries, numReplacedSafebrowsing)}
-                title={
-                    <Link to={`logs?response_status=${RESPONSE_FILTER.BLOCKED_THREATS.QUERY}`}>
-                        <Trans>stats_malware_phishing</Trans>
-                    </Link>
-                }
-                variant={STATS_CARD_VARIANTS.THREATS}
-            />
-        </div>
+            <div className={cardColumnClass}>
+                <StatsCard
+                    total={numBlockedFiltering}
+                    lineData={blockedFiltering}
+                    percent={getPercent(numDnsQueries, numBlockedFiltering)}
+                    title={
+                        <Trans
+                            components={[
+                                <Link to={`logs?response_status=${RESPONSE_FILTER.BLOCKED.QUERY}`} key="0">
+                                    link
+                                </Link>,
+                            ]}>
+                            blocked_by
+                        </Trans>
+                    }
+                    variant={STATS_CARD_VARIANTS.ADS}
+                />
+            </div>
 
-        <div className="col-sm-6 col-lg-3">
-            <StatsCard
-                total={numReplacedParental}
-                lineData={replacedParental}
-                percent={getPercent(numDnsQueries, numReplacedParental)}
-                title={
-                    <Link to={`logs?response_status=${RESPONSE_FILTER.BLOCKED_ADULT_WEBSITES.QUERY}`}>
-                        <Trans>stats_adult</Trans>
-                    </Link>
-                }
-                variant={STATS_CARD_VARIANTS.ADULT}
-            />
+            {showThreatStats && (
+                <div className={cardColumnClass}>
+                    <StatsCard
+                        total={numReplacedSafebrowsing}
+                        lineData={replacedSafebrowsing}
+                        percent={getPercent(numDnsQueries, numReplacedSafebrowsing)}
+                        title={
+                            <Link to={`logs?response_status=${RESPONSE_FILTER.BLOCKED_THREATS.QUERY}`}>
+                                <Trans>stats_malware_phishing</Trans>
+                            </Link>
+                        }
+                        variant={STATS_CARD_VARIANTS.THREATS}
+                    />
+                </div>
+            )}
+
+            {showAdultStats && (
+                <div className={cardColumnClass}>
+                    <StatsCard
+                        total={numReplacedParental}
+                        lineData={replacedParental}
+                        percent={getPercent(numDnsQueries, numReplacedParental)}
+                        title={
+                            <Link to={`logs?response_status=${RESPONSE_FILTER.BLOCKED_ADULT_WEBSITES.QUERY}`}>
+                                <Trans>stats_adult</Trans>
+                            </Link>
+                        }
+                        variant={STATS_CARD_VARIANTS.ADULT}
+                    />
+                </div>
+            )}
         </div>
-    </div>
-);
+    );
+};
 
 export default withTranslation()(Statistics);

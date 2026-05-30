@@ -21,17 +21,19 @@ import Dropdown from '../ui/Dropdown';
 import UpstreamResponses from './UpstreamResponses';
 
 import UpstreamAvgTime from './UpstreamAvgTime';
-import { AccessData, DashboardData, StatsData } from '../../initialState';
+import { AccessData, DashboardData, SettingsData, StatsData } from '../../initialState';
 
 interface DashboardProps {
     dashboard: DashboardData;
     stats: StatsData;
     access: AccessData;
+    settings: SettingsData;
     getStats: (...args: unknown[]) => unknown;
     getStatsConfig: (...args: unknown[]) => unknown;
     toggleProtection: (...args: unknown[]) => unknown;
     getClients: (...args: unknown[]) => unknown;
     getAccessList: () => (dispatch: any) => void;
+    initSettings: (...args: unknown[]) => unknown;
 }
 
 const Dashboard = ({
@@ -42,6 +44,8 @@ const Dashboard = ({
     toggleProtection,
     stats,
     access,
+    settings,
+    initSettings,
 }: DashboardProps) => {
     const { t } = useTranslation();
 
@@ -49,6 +53,7 @@ const Dashboard = ({
         getAccessList();
         getStats();
         getStatsConfig();
+        initSettings();
     };
 
     useEffect(() => {
@@ -87,9 +92,15 @@ const Dashboard = ({
         </button>
     );
 
-    const statsProcessing = stats.processingStats || stats.processingGetConfig || access.processing;
+    const statsProcessing =
+        stats.processingStats ||
+        stats.processingGetConfig ||
+        access.processing ||
+        settings.processing;
 
     const subtitle = getSubtitle();
+    const parentalEnabled = settings.settingsList?.parental?.enabled ?? false;
+    const safebrowsingEnabled = settings.settingsList?.safebrowsing?.enabled ?? false;
 
     const DISABLE_PROTECTION_ITEMS = [
         {
@@ -202,6 +213,8 @@ const Dashboard = ({
                             numBlockedFiltering={stats.numBlockedFiltering}
                             numReplacedSafebrowsing={stats.numReplacedSafebrowsing}
                             numReplacedParental={stats.numReplacedParental}
+                            showThreatStats={safebrowsingEnabled}
+                            showAdultStats={parentalEnabled}
                         />
                     </div>
 
