@@ -18,9 +18,29 @@ See also the [v0.107.78 GitHub milestone][ms-v0.107.78].
 NOTE: Add new changes BELOW THIS COMMENT.
 -->
 
+### Added
+
+- Improved updater logging to give users more insight into the problem with version updating ([#8410]).
+
+[#8410]: https://github.com/AdguardTeam/AdGuardHome/issues/8410
+
+### Security
+
+- The H2C connection establishment via HTTP/1.1 request upgrade is no longer supported.  See [RFC 9113][rfc9113].
+
+- The size of rulelists is limited. This is necessary to prevent a user's machine from becoming overloaded if the filter source misbehaves.
+
+### Changed
+
+#### Configuration changes
+
+- The `filtering` object of the YAML configuration now includes a new property, `max_http_size`, which defines the maximum size of the HTTP request for rulelists. To disable the limitation, set a large size, such as `1 TB`.
+
 ### Fixed
 
 - Blocked services check on the Custom filtering rules page does not work properly without specifying of a client.
+
+[rfc9113]: https://datatracker.ietf.org/doc/html/rfc9113
 
 <!--
 NOTE: Add new changes ABOVE THIS COMMENT.
