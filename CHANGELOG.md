@@ -18,19 +18,21 @@ See also the [v0.107.78 GitHub milestone][ms-v0.107.78].
 NOTE: Add new changes BELOW THIS COMMENT.
 -->
 
-### Added
-
-- Improved updater logging to give users more insight into the problem with version updating ([#8410]).
-
-[#8410]: https://github.com/AdguardTeam/AdGuardHome/issues/8410
-
 ### Security
 
 - The H2C connection establishment via HTTP/1.1 request upgrade is no longer supported.  See [RFC 9113][rfc9113].
 
-- The size of rulelists is limited. This is necessary to prevent a user's machine from becoming overloaded if the filter source misbehaves.
+- Go version has been updated to prevent the possibility of exploiting the Go vulnerabilities fixed in [1.26.5][go-1.26.5].
+
+- The size of rulelists is limited.  This is necessary to prevent a user's machine from becoming overloaded if the filter source misbehaves.
+
+### Added
+
+- Improved updater logging to give users more insight into the problem with version updating ([#8410]).
 
 ### Changed
+
+- The interval of filter updates can now be set to any number of ours between 0 and 365 days in the configuration file.
 
 #### Configuration changes
 
@@ -38,9 +40,17 @@ NOTE: Add new changes BELOW THIS COMMENT.
 
 ### Fixed
 
+- Invalid AA flag in DNS responses ([#7955]).
+
+- The parsing of the `ech` parameter in DNS rewrite rules for the HTTPS record type ([#8276]).
+
 - Blocked services check on the Custom filtering rules page does not work properly without specifying of a client.
 
-[rfc9113]: https://datatracker.ietf.org/doc/html/rfc9113
+[#7955]:     https://github.com/AdguardTeam/AdGuardHome/issues/7955
+[#8276]:     https://github.com/AdguardTeam/AdGuardHome/issues/8276
+[#8410]:     https://github.com/AdguardTeam/AdGuardHome/issues/8410
+[go-1.26.5]: https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc
+[rfc9113]:   https://datatracker.ietf.org/doc/html/rfc9113
 
 <!--
 NOTE: Add new changes ABOVE THIS COMMENT.
